@@ -1,0 +1,5 @@
+<resources>
+    <color name="colorPrimary">#4CAF50</color> <!-- 연두색 -->
+    <color name="colorPrimaryDark">#4CAF50</color>
+    <color name="colorAccent">#03DAC5</color>
+</resources>
