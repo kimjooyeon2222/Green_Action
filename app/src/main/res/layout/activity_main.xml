@@ -156,7 +156,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="자유게시판"
+                        android:text="오늘의 이슈"
                         android:textSize="16sp"/>
 
                     <TextView
@@ -178,13 +178,13 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="비밀게시판"
+                        android:text="자유 게시판"
                         android:textSize="16sp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="날모레 여친 생일인데"
+                        android:text=""
                         android:textColor="@android:color/darker_gray"/>
                 </LinearLayout>
 
@@ -200,7 +200,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="졸업생게시판"
+                        android:text="공지사항"
                         android:textSize="16sp"/>
 
                     <TextView
@@ -222,7 +222,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="새내기게시판"
+                        android:text="Q &amp; A 게시판"
                         android:textSize="16sp"/>
 
                     <TextView
