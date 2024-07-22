@@ -16,20 +16,238 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorPrimary"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:navigationIcon="@drawable/ic_menu" />
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:navigationIcon="@drawable/ic_menu" />
 
-        <FrameLayout
-            android:id="@+id/container"
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Green Action"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:textColor="@android:color/white"/>
+
+        <GridLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:rowCount="2"
+            android:columnCount="2"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/air_pollution"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:gravity="center"
+                android:background="@android:color/holo_green_light"
+                android:text="대기 오염"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:padding="16dp"
+                android:layout_margin="2dp"
+                android:onClick="onPartitionClick"/>
+
+            <TextView
+                android:id="@+id/water_pollution"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_row="0"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:gravity="center"
+                android:background="@android:color/holo_blue_light"
+                android:text="수질 오염"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:padding="16dp"
+                android:layout_margin="2dp"
+                android:onClick="onPartitionClick"/>
+
+            <TextView
+                android:id="@+id/soil_pollution"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:gravity="center"
+                android:background="@android:color/holo_orange_light"
+                android:text="토양 오염"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:padding="16dp"
+                android:layout_margin="2dp"
+                android:onClick="onPartitionClick"/>
+
+            <TextView
+                android:id="@+id/plastic_pollution"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:gravity="center"
+                android:background="@android:color/holo_purple"
+                android:text="플라스틱 오염"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:padding="16dp"
+                android:layout_margin="2dp"
+                android:onClick="onPartitionClick"/>
+        </GridLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="커뮤니티"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="더 보기 >"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:onClick="onMoreClick"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/rounded_corner_background"
+                android:padding="8dp">
+
+                <!-- 게시판 항목 1 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="자유게시판"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1 트랙 상호변경 어디서 변경하나요??"
+                        android:textColor="@android:color/darker_gray"/>
+                </LinearLayout>
+
+                <!-- 게시판 항목 2 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="비밀게시판"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="날모레 여친 생일인데"
+                        android:textColor="@android:color/darker_gray"/>
+                </LinearLayout>
+
+                <!-- 게시판 항목 3 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="졸업생게시판"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="선배님중에서 에코프로 가신분 계신가요?"
+                        android:textColor="@android:color/darker_gray"/>
+                </LinearLayout>
+
+                <!-- 게시판 항목 4 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="새내기게시판"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="대학생 연합 환경동아리 푸름 신입회원..."
+                        android:textColor="@android:color/darker_gray"/>
+                </LinearLayout>
+
+                <!-- 게시판 항목 5 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="8dp"/>
+            </LinearLayout>
+        </LinearLayout>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:menu="@menu/bottom_nav_menu"/>
+
     </LinearLayout>
 
     <com.google.android.material.navigation.NavigationView
