@@ -21,4 +21,3 @@ drawerlayout = { group = "androidx.drawerlayout", name = "drawerlayout", version
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-

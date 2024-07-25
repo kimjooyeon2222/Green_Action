@@ -3,14 +3,14 @@
     <style name="Theme.MyApp" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimary</item> <!-- 연두색으로 변경 -->
+        <item name="colorPrimaryVariant">@color/colorPrimary</item>
         <item name="colorOnPrimary">#FFFFFF</item>
         <!-- Secondary brand color -->
         <item name="colorSecondary">#03DAC5</item>
         <item name="colorSecondaryVariant">#018786</item>
         <item name="colorOnSecondary">#000000</item>
         <!-- Status bar color -->
-        <item name="android:statusBarColor">@color/colorPrimary</item> <!-- 연두색으로 변경 -->
+        <item name="android:statusBarColor">@color/colorPrimary</item>
         <!-- Customize your theme here -->
     </style>
 </resources>

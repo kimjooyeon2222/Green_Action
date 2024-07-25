@@ -12,5 +12,4 @@
         android:textSize="24sp"
         android:textStyle="bold"/>
 
-    <!-- 내용 추가 -->
 </LinearLayout>
