@@ -1,4 +1,5 @@
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
@@ -6,21 +7,23 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- 메인 화면의 레이아웃 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <!-- 툴바 -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
+            android:background="@color/actionGreen"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:navigationIcon="@drawable/menu" />
 
-
+        <!-- 그리드 레이아웃: 각 오염 유형 버튼 -->
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -29,13 +32,14 @@
             android:columnCount="2"
             android:layout_margin="16dp">
 
+            <!-- 대기 오염 버튼 -->
             <TextView
                 android:id="@+id/air_pollution"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_row="0"
-                android:layout_rowWeight="1"
                 android:layout_column="0"
+                android:layout_rowWeight="1"
                 android:layout_columnWeight="1"
                 android:layout_margin="2dp"
                 android:background="@android:color/holo_green_light"
@@ -46,65 +50,69 @@
                 android:textColor="@android:color/black"
                 android:textSize="18sp" />
 
+            <!-- 수질 오염 버튼 -->
             <TextView
                 android:id="@+id/water_pollution"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_row="0"
                 android:layout_column="1"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                android:gravity="center"
-                android:background="@android:color/holo_blue_light"
-                android:text="수질 오염"
-                android:textSize="18sp"
-                android:textColor="@android:color/black"
-                android:padding="16dp"
+                android:layout_columnWeight="1"
                 android:layout_margin="2dp"
-                android:onClick="onPartitionClick" />
+                android:background="@android:color/holo_blue_light"
+                android:gravity="center"
+                android:onClick="onPartitionClick"
+                android:padding="16dp"
+                android:text="수질 오염"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
+            <!-- 토양 오염 버튼 -->
             <TextView
                 android:id="@+id/soil_pollution"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_row="1"
                 android:layout_column="0"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                android:gravity="center"
-                android:background="@android:color/holo_orange_light"
-                android:text="토양 오염"
-                android:textSize="18sp"
-                android:textColor="@android:color/black"
-                android:padding="16dp"
+                android:layout_columnWeight="1"
                 android:layout_margin="2dp"
-                android:onClick="onPartitionClick" />
+                android:background="@android:color/holo_orange_light"
+                android:gravity="center"
+                android:onClick="onPartitionClick"
+                android:padding="16dp"
+                android:text="토양 오염"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
+            <!-- 플라스틱 오염 버튼 -->
             <TextView
                 android:id="@+id/plastic_pollution"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_row="1"
                 android:layout_column="1"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                android:gravity="center"
-                android:background="@android:color/holo_purple"
-                android:text="플라스틱 오염"
-                android:textSize="18sp"
-                android:textColor="@android:color/black"
-                android:padding="16dp"
+                android:layout_columnWeight="1"
                 android:layout_margin="2dp"
-                android:onClick="onPartitionClick" />
+                android:background="@android:color/holo_purple"
+                android:gravity="center"
+                android:onClick="onPartitionClick"
+                android:padding="16dp"
+                android:text="플라스틱 오염"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
         </GridLayout>
 
-
+        <!-- 커뮤니티 섹션 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- 커뮤니티 헤더 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -128,6 +136,7 @@
                     android:onClick="onMoreClick" />
             </LinearLayout>
 
+            <!-- 게시판 리스트 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -153,7 +162,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="'낙뢰·폭우·찜통' 극한 변덕 날씨에 녹초..."
+                        android:text="오늘의 이슈 최신 글 제목 미리보기"
                         android:textColor="@android:color/darker_gray" />
                 </LinearLayout>
 
@@ -175,7 +184,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="환경오염 종류 및 해결방안 자세히 공부해요!"
+                        android:text="자유 게시판 최신 글 제목 미리보기"
                         android:textColor="@android:color/darker_gray" />
                 </LinearLayout>
 
@@ -197,7 +206,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="그린액션 공공 데이터 API 버그 수정"
+                        android:text="공지사항 최신 글 제목 미리보기"
                         android:textColor="@android:color/darker_gray" />
                 </LinearLayout>
 
@@ -219,7 +228,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="AR은 어떻게 이용할 수 있나요?"
+                        android:text="Q &amp; A 게시판 최신 글 제목 미리보기"
                         android:textColor="@android:color/darker_gray" />
                 </LinearLayout>
 
@@ -227,6 +236,7 @@
 
         </LinearLayout>
 
+        <!-- 하단 네비게이션 -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
@@ -235,6 +245,7 @@
 
     </LinearLayout>
 
+    <!-- 네비게이션 드로어 메뉴 -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"

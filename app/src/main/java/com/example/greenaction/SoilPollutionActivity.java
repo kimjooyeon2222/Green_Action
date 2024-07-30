@@ -4,14 +4,10 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SoilPollutionActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_soil_pollution);
-
-        // 상태 표시줄 색상 변경
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
-        }
     }
 }
