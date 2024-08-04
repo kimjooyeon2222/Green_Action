@@ -13,46 +13,6 @@
         android:theme="@style/Theme.GreenAction"
         tools:targetApi="31">
 
-    <!-- QuizActivity 정의 -->
-    <activity
-        android:name=".QuizActivity"
-        android:exported="true"/>
-
-    <!-- LeaderboardActivity 정의 -->
-    <activity
-        android:name=".LeaderboardActivity"
-        android:exported="true"/>
-
-    <!-- SettingsActivity 정의 -->
-    <activity
-        android:name=".SettingsActivity"
-        android:exported="true"/>
-
-    <!-- CommunityActivity 정의 -->
-    <activity
-        android:name=".CommunityActivity"
-        android:exported="true"/>
-
-    <!-- AirPollutionActivity 정의 -->
-    <activity
-        android:name=".AirPollutionActivity"
-        android:exported="true"/>
-
-    <!-- WaterPollutionActivity 정의 -->
-    <activity
-        android:name=".WaterPollutionActivity"
-        android:exported="true"/>
-
-    <!-- SoilPollutionActivity 정의 -->
-    <activity
-        android:name=".SoilPollutionActivity"
-        android:exported="true"/>
-
-    <!-- PlasticPollutionActivity 정의 -->
-    <activity
-        android:name=".PlasticPollutionActivity"
-        android:exported="true"/>
-
     <!-- MainActivity 정의 -->
     <activity
         android:name=".MainActivity"

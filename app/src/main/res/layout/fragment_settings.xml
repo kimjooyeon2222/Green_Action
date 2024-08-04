@@ -5,11 +5,9 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <!-- 여기에 Settings Fragment의 내용을 추가합니다 -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="토양 오염"
-        android:textSize="24sp"
-        android:textStyle="bold"/>
-
+        android:text="Settings" />
 </LinearLayout>
