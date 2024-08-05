@@ -5,9 +5,10 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- 여기에 Air Pollution Fragment의 내용을 추가합니다 -->
+    <!-- Air Pollution Fragment의 TextView에 ID를 추가합니다 -->
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Air Pollution" />
+        android:id="@+id/textViewAirPollution"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Air Pollution" />
 </LinearLayout>
