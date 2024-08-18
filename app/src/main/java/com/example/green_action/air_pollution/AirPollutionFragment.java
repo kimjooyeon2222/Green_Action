@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.green_action.R;
 
@@ -35,18 +38,40 @@ public class AirPollutionFragment extends Fragment {
     private static final String API_KEY = "zgDi2jCAAHkGbiYY9vTynvRLYSU3sGls9eAJM4HnHCgjj5AQM05gxkuESMijNOcgGJS+FBii9jYfBtH+Zs4ESQ==";
     private static final String BASE_URL = "https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty";
     private TextView textView;
+    private Button buttonQuizAndLearn;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_air_pollution, container, false);
         textView = view.findViewById(R.id.textViewAirPollution);
+        buttonQuizAndLearn = view.findViewById(R.id.buttonQuizAndLearn);
+
+        // 퀴즈 버튼에 클릭 리스너 추가
+        buttonQuizAndLearn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // AirQuizList 프래그먼트로 이동
+                loadQuizFragment();
+            }
+        });
+
+        // 공기오염 데이터 가져오기
         fetchAirPollutionData();
         return view;
     }
 
+    private void loadQuizFragment() {
+        Fragment quizFragment = new AirQuizList(); // AirQuizList 프래그먼트 생성
+        FragmentManager fragmentManager = getParentFragmentManager(); // getParentFragmentManager() 사용
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, quizFragment); // fragment_container는 실제 프래그먼트 컨테이너 ID로 변경하세요.
+        transaction.addToBackStack(null); // 백스택에 추가하여 뒤로가기 기능 추가
+        transaction.commit();
+    }
+
     private void fetchAirPollutionData() {
-        new FetchAirPollutionTask().execute("경기"); // 예시로 경기도 데이터를 가져옵니다.
+        new FetchAirPollutionTask().execute("경기"); // 예시로 '경기' 데이터를 가져옵니다.
     }
 
     private class FetchAirPollutionTask extends AsyncTask<String, Void, List<Map<String, String>>> {
@@ -84,7 +109,7 @@ public class AirPollutionFragment extends Fragment {
                 }
                 textView.setText(stringBuilder.toString());
             } else {
-                textView.setText("Failed to retrieve data.");
+                textView.setText("데이터를 가져오는 데 실패했습니다.");
             }
         }
 
