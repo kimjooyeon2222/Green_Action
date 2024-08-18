@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.greenaction">
+    >
 
     <!-- 인터넷 권한 추가 -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -17,16 +18,44 @@
         android:theme="@style/Theme.GreenAction"
         tools:targetApi="31">
 
-        <!-- MainActivity 정의 -->
+        <!-- Firebase 기본 설정 (추가된 google-services.json에서 구성됨) -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_launcher_foreground" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/actionGreen" />
+
+        <!-- 기본 웹 클라이언트 ID 추가 (필요한 경우, google-services.json에 설정된 경우 생략 가능) -->
+        <meta-data
+            android:name="com.google.android.gms.auth.api.credentials.DefaultCredentialPickerEnabled"
+            android:value="true" />
+
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
-            <!-- 앱 실행 시 MainActivity를 시작하도록 설정 -->
+            android:name=".LoginActivity"
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ProfileActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".QuizActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".UserJoin"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".UserMain"
+            android:exported="true"
+            android:screenOrientation="portrait"/>
 
     </application>
 

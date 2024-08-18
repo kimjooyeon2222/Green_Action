@@ -21,8 +21,12 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/actionGreen"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:navigationIcon="@drawable/menu" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+            <!-- Custom layout for toolbar -->
+            <include
+                layout="@layout/toolbar_layout" />
+        </androidx.appcompat.widget.Toolbar>
 
         <!-- 프래그먼트 컨테이너 -->
         <FrameLayout
@@ -45,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:headerLayout="@layout/nav_header"
+        app:headerLayout="@layout/activity_profile"
         app:menu="@menu/nav_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
