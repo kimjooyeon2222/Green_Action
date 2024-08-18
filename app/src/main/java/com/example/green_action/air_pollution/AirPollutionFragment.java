@@ -1,4 +1,4 @@
-package com.example.green_action;
+package com.example.green_action.air_pollution;
 
 import android.os.AsyncTask;
 import android.os.Bundle;

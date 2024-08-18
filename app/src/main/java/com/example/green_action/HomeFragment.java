@@ -12,7 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.green_action.R;
+import com.example.green_action.air_pollution.AirPollutionFragment;
+import com.example.green_action.plastic_pollution.PlasticPollutionFragment;
+import com.example.green_action.soil_pollution.SoilPollutionFragment;
+import com.example.green_action.water_pollution.WaterPollutionFragment;
 
 public class HomeFragment extends Fragment {
 
