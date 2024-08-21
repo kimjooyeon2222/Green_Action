@@ -12,14 +12,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.green_action.R;
-
-public class LeaderboardFragment extends Fragment {
+public class DailyQuizFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_leaderboard, container, false);
+        return inflater.inflate(R.layout.fragment_daily_quiz, container, false);
     }
 
     @Override

@@ -16,7 +16,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-public class UserMain extends AppCompatActivity {
+public class UserMainActivity extends AppCompatActivity {
 
     private static final String TAG = "UserMain";
     private FirebaseClient firebaseClient;
@@ -24,7 +24,7 @@ public class UserMain extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.user_main);
+        setContentView(R.layout.activity_user_main);
 
         // FirebaseClient 초기화
         firebaseClient = new FirebaseClient();
@@ -42,7 +42,7 @@ public class UserMain extends AppCompatActivity {
 
         if (userId == null) {
             Log.e(TAG, "User ID is null");
-            Toast.makeText(UserMain.this, "사용자 ID를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserMainActivity.this, "사용자 ID를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -61,7 +61,7 @@ public class UserMain extends AppCompatActivity {
 
                     // 프로필 이미지 로드
                     if (user.profileImage != null && !user.profileImage.isEmpty()) {
-                        Glide.with(UserMain.this)
+                        Glide.with(UserMainActivity.this)
                                 .load(user.profileImage)
                                 .placeholder(R.drawable.ic_profile_placeholder)
                                 .into(userProfileImage);
@@ -70,14 +70,14 @@ public class UserMain extends AppCompatActivity {
                     }
                 } else {
                     Log.e(TAG, "User data is null");
-                    Toast.makeText(UserMain.this, "사용자 정보를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserMainActivity.this, "사용자 정보를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e(TAG, "Database error: " + databaseError.getMessage());
-                Toast.makeText(UserMain.this, "데이터베이스 오류: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserMainActivity.this, "데이터베이스 오류: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -10,8 +10,6 @@ public class DailyQuiz {
     public String explanation;
     public long timestamp;
 
-    public DailyQuiz() {}
-
     public DailyQuiz(int quizId, String question, String correctAnswer, int correctAnswerLength, int maxScore, int attemptsAllowed, String explanation, long timestamp) {
         this.quizId = quizId;
         this.question = question;

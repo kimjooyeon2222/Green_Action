@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         if (itemId == R.id.nav_home) {
             fragment = new HomeFragment();
         } else if (itemId == R.id.nav_quiz) {
-            fragment = new QuizFragment();
+            fragment = new DailyQuizFragment();
         } else if (itemId == R.id.nav_leaderboard) {
             fragment = new LeaderboardFragment();
         }

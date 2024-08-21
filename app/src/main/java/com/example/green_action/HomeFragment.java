@@ -6,8 +6,10 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -22,7 +24,6 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Layout을 인플레이트하고 View를 반환합니다
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // 버튼 클릭 이벤트 설정
@@ -93,5 +94,17 @@ public class HomeFragment extends Fragment {
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack(null); // Back stack에 추가
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // 앱 종료
+                requireActivity().finish();
+            }
+        });
     }
 }

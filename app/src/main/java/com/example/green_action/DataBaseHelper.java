@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "quiz_database";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2; // 데이터베이스 버전 증가
 
     public DataBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -90,11 +90,24 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 "order_index INTEGER NOT NULL" +
                 ")";
         db.execSQL(createPlasticPollutionQuizTableQuery);
+
+        // quiz_progress 테이블 생성
+        String createQuizProgressTableQuery = "CREATE TABLE quiz_progress (" +
+                "user_id TEXT NOT NULL, " +
+                "quiz_id INTEGER NOT NULL, " +
+                "is_solved INTEGER DEFAULT 0, " +  // 0: 미해결, 1: 해결됨
+                "PRIMARY KEY (user_id, quiz_id)," +
+                "FOREIGN KEY (user_id) REFERENCES user_table(user_id) ON DELETE CASCADE" +
+                ")";
+        db.execSQL(createQuizProgressTableQuery);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // 테이블을 업데이트할 때 기존 테이블 삭제
+        if (oldVersion < 2) {
+            db.execSQL("DROP TABLE IF EXISTS quiz_progress");
+        }
         db.execSQL("DROP TABLE IF EXISTS user_table");
         db.execSQL("DROP TABLE IF EXISTS air_pollution_quiz");
         db.execSQL("DROP TABLE IF EXISTS soil_pollution_quiz");

@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // 회원가입 버튼 클릭 시 회원가입 액티비티로 이동
         joinButton.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, UserJoin.class);
+            Intent intent = new Intent(LoginActivity.this, UserJoinActivity.class);
             startActivity(intent);
         });
 

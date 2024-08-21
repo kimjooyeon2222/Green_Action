@@ -47,13 +47,10 @@
         <activity android:name=".ProfileActivity"
             android:exported="true"
             android:screenOrientation="portrait"/>
-        <activity android:name=".QuizActivity"
+        <activity android:name=".UserJoinActivity"
             android:exported="true"
             android:screenOrientation="portrait"/>
-        <activity android:name=".UserJoin"
-            android:exported="true"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".UserMain"
+        <activity android:name=".UserMainActivity"
             android:exported="true"
             android:screenOrientation="portrait"/>
 

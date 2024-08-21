@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -48,21 +49,30 @@ public class AirPollutionFragment extends Fragment {
         buttonQuizAndLearn = view.findViewById(R.id.buttonQuizAndLearn);
 
         // 퀴즈 버튼에 클릭 리스너 추가
-        buttonQuizAndLearn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // AirQuizList 프래그먼트로 이동
-                loadQuizFragment();
-            }
-        });
+        buttonQuizAndLearn.setOnClickListener(v -> loadQuizFragment());
 
         // 공기오염 데이터 가져오기
         fetchAirPollutionData();
+
+        // 뒤로 가기 버튼 설정
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // HomeFragment로 돌아가기
+                FragmentManager fragmentManager = getParentFragmentManager();
+                if (fragmentManager.getBackStackEntryCount() > 0) {
+                    fragmentManager.popBackStack(); // 이전 프래그먼트로 이동
+                } else {
+                    requireActivity().finish(); // 백스택이 비어있으면 앱 종료
+                }
+            }
+        });
+
         return view;
     }
 
     private void loadQuizFragment() {
-        Fragment quizFragment = new AirQuizList(); // AirQuizList 프래그먼트 생성
+        Fragment quizFragment = new AirQuizListFragment(); // AirQuizList 프래그먼트 생성
         FragmentManager fragmentManager = getParentFragmentManager(); // getParentFragmentManager() 사용
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_container, quizFragment); // fragment_container는 실제 프래그먼트 컨테이너 ID로 변경하세요.

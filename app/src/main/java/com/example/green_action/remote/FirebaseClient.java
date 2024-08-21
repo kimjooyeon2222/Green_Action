@@ -2,14 +2,16 @@ package com.example.green_action.remote;
 
 import android.util.Log;
 
-import com.example.green_action.Comment;
-import com.example.green_action.DailyQuiz;
-import com.example.green_action.Post;
 import com.example.green_action.User;
 import com.example.green_action.Ranking;
+import com.example.green_action.DailyQuiz;
+import com.example.green_action.Post;
+import com.example.green_action.Comment;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 
 public class FirebaseClient {
 
@@ -40,10 +42,10 @@ public class FirebaseClient {
         }
     }
 
-    // 퀴즈 진행도를 저장하는 메서드
+    // 퀴즈 진행 상태 저장 메서드
     public void saveQuizProgress(String userId, int quizId, boolean isSolved) {
         DatabaseReference userQuizRef = dbRef.child("users").child(userId).child("quiz_progress").child(String.valueOf(quizId));
-        userQuizRef.setValue(isSolved).addOnCompleteListener(task -> {
+        userQuizRef.setValue(isSolved ? 1 : 0).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(TAG, "Quiz progress saved successfully.");
             } else {
@@ -52,10 +54,10 @@ public class FirebaseClient {
         });
     }
 
-    // 퀴즈 진행도를 불러오는 메서드
-    public void loadQuizProgress(String userId, int quizId, ValueEventListener listener) {
-        DatabaseReference userQuizRef = dbRef.child("users").child(userId).child("quiz_progress").child(String.valueOf(quizId));
-        userQuizRef.addListenerForSingleValueEvent(listener);
+    // 퀴즈 진행 상태 전체를 Firebase에서 불러오는 메서드
+    public void loadAllQuizProgress(String userId, ValueEventListener listener) {
+        DatabaseReference quizProgressRef = dbRef.child("users").child(userId).child("quiz_progress");
+        quizProgressRef.addListenerForSingleValueEvent(listener);
     }
 
     // 게시글을 저장하는 메서드

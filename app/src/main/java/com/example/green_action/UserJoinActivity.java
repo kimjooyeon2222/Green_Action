@@ -30,7 +30,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public class UserJoin extends AppCompatActivity {
+public class UserJoinActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private FirebaseAuth mAuth;
@@ -52,7 +52,7 @@ public class UserJoin extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.user_join);
+        setContentView(R.layout.activity_user_join);
 
         mAuth = FirebaseAuth.getInstance();
         storageRef = FirebaseStorage.getInstance().getReference("profile_images");
@@ -89,7 +89,7 @@ public class UserJoin extends AppCompatActivity {
                 String gender = selectedGenderButton.getText().toString().trim();
 
                 mAuth.createUserWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(UserJoin.this, task -> {
+                        .addOnCompleteListener(UserJoinActivity.this, task -> {
                             if (task.isSuccessful()) {
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 if (user != null) {
@@ -98,7 +98,7 @@ public class UserJoin extends AppCompatActivity {
                                         fileReference.putFile(profileImageUri).addOnSuccessListener(taskSnapshot -> fileReference.getDownloadUrl().addOnSuccessListener(uri -> {
                                             String imageUrl = uri.toString();
                                             saveUserData(user, email, id, password, name, contact, gender, imageUrl);
-                                        })).addOnFailureListener(e -> Toast.makeText(UserJoin.this, "프로필 이미지 업로드 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                                        })).addOnFailureListener(e -> Toast.makeText(UserJoinActivity.this, "프로필 이미지 업로드 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                                     } else {
                                         saveUserData(user, email, id, password, name, contact, gender, "");
                                     }
@@ -106,7 +106,7 @@ public class UserJoin extends AppCompatActivity {
                             } else {
                                 String errorMessage = "회원가입 실패: " + Objects.requireNonNull(task.getException()).getMessage();
                                 Log.w(TAG, errorMessage);
-                                Toast.makeText(UserJoin.this, errorMessage, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(UserJoinActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                             }
                         });
             }
@@ -153,8 +153,8 @@ public class UserJoin extends AppCompatActivity {
         FirebaseClient firebaseClient = new FirebaseClient();
         firebaseClient.saveUserData(user.getUid(), newUser);
 
-        Toast.makeText(UserJoin.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(UserJoin.this, LoginActivity.class);
+        Toast.makeText(UserJoinActivity.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(UserJoinActivity.this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
@@ -180,16 +180,16 @@ public class UserJoin extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     isUsernameAvailable = false;
-                    Toast.makeText(UserJoin.this, "아이디가 이미 존재합니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserJoinActivity.this, "아이디가 이미 존재합니다.", Toast.LENGTH_SHORT).show();
                 } else {
                     isUsernameAvailable = true;
-                    Toast.makeText(UserJoin.this, "사용 가능한 아이디입니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserJoinActivity.this, "사용 가능한 아이디입니다.", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(UserJoin.this, "아이디 중복 체크 실패: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserJoinActivity.this, "아이디 중복 체크 실패: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -206,47 +206,47 @@ public class UserJoin extends AppCompatActivity {
 
         if (email.isEmpty() || id.isEmpty() || password.isEmpty() || passwordCk.isEmpty() ||
                 name.isEmpty() || contact.isEmpty() || selectedGenderId == -1) {
-            Toast.makeText(UserJoin.this, "모든 필드를 채워주세요.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserJoinActivity.this, "모든 필드를 채워주세요.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (!isUsernameAvailable) {
-            Toast.makeText(UserJoin.this, "아이디 중복 체크를 해주세요.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserJoinActivity.this, "아이디 중복 체크를 해주세요.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         if (!isValidId(id)) {
-            Toast.makeText(UserJoin.this, "아이디는 6~12자의 영문, 숫자, -, _만 사용 가능합니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserJoinActivity.this, "아이디는 6~12자의 영문, 숫자, -, _만 사용 가능합니다.", Toast.LENGTH_SHORT).show();
             userId.requestFocus();
             return false;
         }
 
         if (!isValidPassword(password)) {
-            Toast.makeText(UserJoin.this, "비밀번호는 8~20자의 영문, 숫자, 특수문자 중 2가지 이상만 사용 가능합니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserJoinActivity.this, "비밀번호는 8~20자의 영문, 숫자, 특수문자 중 2가지 이상만 사용 가능합니다.", Toast.LENGTH_SHORT).show();
             userPassword.requestFocus();
             return false;
         }
 
         if (!password.equals(passwordCk)) {
-            Toast.makeText(UserJoin.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserJoinActivity.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
             userPwCk.requestFocus();
             return false;
         }
 
         if (!isValidEmail(email)) {
-            Toast.makeText(UserJoin.this, "이메일 형식이 올바르지 않습니다.(예: example@example.com)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserJoinActivity.this, "이메일 형식이 올바르지 않습니다.(예: example@example.com)", Toast.LENGTH_SHORT).show();
             userEmail.requestFocus();
             return false;
         }
 
         if (!isValidName(name)) {
-            Toast.makeText(UserJoin.this, "이름 형식이 올바르지 않습니다.(에: 홍길동)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserJoinActivity.this, "이름 형식이 올바르지 않습니다.(에: 홍길동)", Toast.LENGTH_SHORT).show();
             userName.requestFocus();
             return false;
         }
 
         if (!isValidContact(contact)) {
-            Toast.makeText(UserJoin.this, "전화번호 형식이 올바르지 않습니다.(예: 01012345678)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserJoinActivity.this, "전화번호 형식이 올바르지 않습니다.(예: 01012345678)", Toast.LENGTH_SHORT).show();
             userContact.requestFocus();
             return false;
         }
