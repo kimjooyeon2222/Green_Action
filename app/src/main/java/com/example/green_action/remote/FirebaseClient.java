@@ -2,6 +2,8 @@ package com.example.green_action.remote;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.green_action.User;
 import com.example.green_action.Ranking;
 import com.example.green_action.DailyQuiz;
@@ -16,7 +18,6 @@ import com.google.firebase.database.DatabaseError;
 public class FirebaseClient {
 
     private final DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-
     private static final String TAG = "FirebaseClient";
 
     // 사용자 데이터를 Firebase에 저장하는 메서드
@@ -57,7 +58,18 @@ public class FirebaseClient {
     // 퀴즈 진행 상태 전체를 Firebase에서 불러오는 메서드
     public void loadAllQuizProgress(String userId, ValueEventListener listener) {
         DatabaseReference quizProgressRef = dbRef.child("users").child(userId).child("quiz_progress");
-        quizProgressRef.addListenerForSingleValueEvent(listener);
+        quizProgressRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d(TAG, "DataSnapshot received: " + dataSnapshot);
+                listener.onDataChange(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e(TAG, "DatabaseError: " + databaseError.getMessage());
+            }
+        });
     }
 
     // 게시글을 저장하는 메서드
