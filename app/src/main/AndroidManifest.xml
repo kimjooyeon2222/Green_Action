@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!-- 인터넷 권한 추가 -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -41,18 +40,40 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ProfileActivity"
             android:exported="true"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".UserJoinActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UserJoinActivity"
             android:exported="true"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".UserMainActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UserMainActivity"
             android:exported="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+
+        <!-- Community 패키지의 액티비티들 추가 -->
+        <activity
+            android:name=".Community.IssueBoardActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Community.FreeBoardActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Community.NoticeBoardActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Community.QnaBoardActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
 
     </application>
 

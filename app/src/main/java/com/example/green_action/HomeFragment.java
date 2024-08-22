@@ -1,11 +1,13 @@
 package com.example.green_action;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.green_action.Community.CommunityFragment;
 import com.example.green_action.air_pollution.AirPollutionFragment;
 import com.example.green_action.plastic_pollution.PlasticPollutionFragment;
 import com.example.green_action.soil_pollution.SoilPollutionFragment;
@@ -32,6 +35,13 @@ public class HomeFragment extends Fragment {
         setButtonTouchListener(view.findViewById(R.id.soil_pollution));
         setButtonTouchListener(view.findViewById(R.id.plastic_pollution));
         setButtonTouchListener(view.findViewById(R.id.more));
+
+        // TextView 클릭 이벤트 설정
+        setTextViewClickListener(view.findViewById(R.id.tv_issue_board), com.example.green_action.Community.IssueBoardActivity.class);
+        setTextViewClickListener(view.findViewById(R.id.tv_free_board), com.example.green_action.Community.FreeBoardActivity.class);
+        setTextViewClickListener(view.findViewById(R.id.tv_notice_board), com.example.green_action.Community.NoticeBoardActivity.class);
+        setTextViewClickListener(view.findViewById(R.id.tv_qna_board), com.example.green_action.Community.QnaBoardActivity.class);
+
 
         return view;
     }
@@ -94,6 +104,17 @@ public class HomeFragment extends Fragment {
         fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.addToBackStack(null); // Back stack에 추가
         fragmentTransaction.commit();
+    }
+
+    // TextView 클릭 이벤트 설정
+    private void setTextViewClickListener(TextView textView, Class<?> activityClass) {
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), activityClass);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

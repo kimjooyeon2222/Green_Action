@@ -33,6 +33,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.car.ui.lib)
     implementation ("com.google.firebase:firebase-storage:20.0.1")
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("com.google.firebase:firebase-analytics")
