@@ -54,6 +54,8 @@ public class LoginActivity extends AppCompatActivity {
         // 로그인 화면 레이아웃 설정
         setContentView(R.layout.activity_login);
 
+
+
         // EditText와 Button 연결
         id = findViewById(R.id.login_id);
         pw = findViewById(R.id.login_password);

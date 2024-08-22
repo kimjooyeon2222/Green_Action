@@ -218,5 +218,5 @@
                     android:text="Q &amp; A 게시판 최신 글 제목 미리보기"
                     android:textColor="@android:color/darker_gray" />
             </LinearLayout>
-
         </LinearLayout>
+    </LinearLayout>

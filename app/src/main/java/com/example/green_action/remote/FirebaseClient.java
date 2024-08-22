@@ -10,8 +10,6 @@ import com.example.green_action.Comment;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 
 public class FirebaseClient {
 
@@ -71,6 +69,12 @@ public class FirebaseClient {
         });
     }
 
+    // 게시글 데이터를 Firebase에서 불러오는 메서드
+    public void loadPostData(String postId, ValueEventListener listener) {
+        DatabaseReference postRef = dbRef.child("posts").child(postId);
+        postRef.addListenerForSingleValueEvent(listener);
+    }
+
     // 댓글을 저장하는 메서드
     public void saveCommentData(String commentId, Comment comment) {
         dbRef.child("comments").child(commentId).setValue(comment).addOnCompleteListener(task -> {
@@ -80,6 +84,12 @@ public class FirebaseClient {
                 Log.e(TAG, "Failed to save comment data", task.getException());
             }
         });
+    }
+
+    // 댓글 데이터를 Firebase에서 불러오는 메서드
+    public void loadCommentData(String commentId, ValueEventListener listener) {
+        DatabaseReference commentRef = dbRef.child("comments").child(commentId);
+        commentRef.addListenerForSingleValueEvent(listener);
     }
 
     // 랭킹 데이터를 저장하는 메서드
@@ -93,6 +103,12 @@ public class FirebaseClient {
         });
     }
 
+    // 랭킹 데이터를 Firebase에서 불러오는 메서드
+    public void loadRankingData(String userId, ValueEventListener listener) {
+        DatabaseReference rankingRef = dbRef.child("ranking").child(userId);
+        rankingRef.addListenerForSingleValueEvent(listener);
+    }
+
     // 일일 퀴즈를 저장하는 메서드
     public void saveDailyQuizData(String quizId, DailyQuiz dailyQuiz) {
         dbRef.child("daily_quiz").child(quizId).setValue(dailyQuiz).addOnCompleteListener(task -> {
@@ -102,5 +118,11 @@ public class FirebaseClient {
                 Log.e(TAG, "Failed to save daily quiz data", task.getException());
             }
         });
+    }
+
+    // 일일 퀴즈 데이터를 Firebase에서 불러오는 메서드
+    public void loadDailyQuizData(String quizId, ValueEventListener listener) {
+        DatabaseReference dailyQuizRef = dbRef.child("daily_quiz").child(quizId);
+        dailyQuizRef.addListenerForSingleValueEvent(listener);
     }
 }

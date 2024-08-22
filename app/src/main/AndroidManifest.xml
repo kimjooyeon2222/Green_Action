@@ -63,6 +63,26 @@
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".Community.CommunityActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".Community.WritePostActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".Community.CommunityPostActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".Community.EditPostActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".Community.PostDetailActivity"
+            android:exported="true" />
+
+        <!-- 새로 추가된 EditCommentActivity -->
+        <activity
+            android:name=".Community.EditCommentActivity"
+            android:exported="true" />
+        <activity
             android:name=".Community.FreeBoardActivity"
             android:exported="true"
             android:screenOrientation="portrait" />
