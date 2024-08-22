@@ -7,22 +7,25 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.example.green_action.Community.CommunityPostItem;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class DataBaseHandler extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "quiz_database";
     private static final int DATABASE_VERSION = 1;
 
-    // 유저 테이블 이름과 컬럼 정의
-    private static final String TABLE_USER = "user_table";
-    private static final String COLUMN_USER_ID = "user_id";
-    private static final String COLUMN_USER_PASSWORD = "user_pw";
-    private static final String COLUMN_USER_NAME = "username";
-    private static final String COLUMN_USER_EMAIL = "email";
-    private static final String COLUMN_USER_CONTACT = "contact";
-    private static final String COLUMN_USER_GENDER = "gender";
-    private static final String COLUMN_USER_PROFILE_IMAGE = "profileImage";
+    // Firebase 관련 필드
+    private final DatabaseReference postsRef;
 
-    // 퀴즈 진행 상태 테이블 이름과 컬럼 정의
+    // SQLite 관련 테이블 이름과 컬럼 정의
     private static final String TABLE_QUIZ_PROGRESS = "quiz_progress";
     private static final String COLUMN_QUIZ_ID = "quiz_id";
     private static final String COLUMN_QUIZ_STATUS = "is_solved"; // 0: 미해결, 1: 해결됨
@@ -30,21 +33,12 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     // 생성자
     public DataBaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        postsRef = database.getReference("posts");
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // 유저 테이블 생성 쿼리
-        String CREATE_USER_TABLE = "CREATE TABLE " + TABLE_USER + " (" +
-                COLUMN_USER_ID + " TEXT PRIMARY KEY," +
-                COLUMN_USER_PASSWORD + " TEXT," +
-                COLUMN_USER_NAME + " TEXT," +
-                COLUMN_USER_EMAIL + " TEXT," +
-                COLUMN_USER_CONTACT + " TEXT," +
-                COLUMN_USER_GENDER + " TEXT," +
-                COLUMN_USER_PROFILE_IMAGE + " TEXT" + ")";
-        db.execSQL(CREATE_USER_TABLE);
-
         // 퀴즈 진행 상태 테이블 생성 쿼리
         String CREATE_QUIZ_PROGRESS_TABLE = "CREATE TABLE " + TABLE_QUIZ_PROGRESS + " (" +
                 COLUMN_QUIZ_ID + " INTEGER PRIMARY KEY," +
@@ -55,27 +49,8 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // 기존 테이블 삭제 후 재생성
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUIZ_PROGRESS);
         onCreate(db);
-    }
-
-    // 사용자 데이터 추가 메서드
-    public long addUserData(String id, String pw, String name, String email, String contact, String gender, String profileImage) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(COLUMN_USER_ID, id);
-        values.put(COLUMN_USER_PASSWORD, pw);
-        values.put(COLUMN_USER_NAME, name);
-        values.put(COLUMN_USER_EMAIL, email);
-        values.put(COLUMN_USER_CONTACT, contact);
-        values.put(COLUMN_USER_GENDER, gender);
-        values.put(COLUMN_USER_PROFILE_IMAGE, profileImage);
-
-        // 테이블에 데이터 삽입
-        long result = db.insert(TABLE_USER, null, values);
-        db.close(); // 데이터베이스 닫기
-        return result;
     }
 
     // 퀴즈 진행 상태 추가/업데이트 메서드
@@ -123,5 +98,48 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         }
         cursor.close();
         return status;
+    }
+
+    // Firebase를 사용한 게시물 추가 함수
+    public void addPost(CommunityPostItem post) {
+        DatabaseReference newPostRef = postsRef.push();
+        post.setPostId(newPostRef.getKey());
+        newPostRef.setValue(post);
+    }
+
+    // Firebase를 사용한 게시물 수정 함수
+    public void updatePost(String postId, String title, String content) {
+        postsRef.child(postId).child("title").setValue(title);
+        postsRef.child(postId).child("content").setValue(content);
+    }
+
+    // Firebase를 사용한 게시물 삭제 함수
+    public void deletePost(String postId) {
+        postsRef.child(postId).removeValue();
+    }
+
+    // Firebase를 사용한 모든 게시물 가져오기 함수
+    public void getAllPosts(final OnPostsRetrievedListener listener) {
+        postsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<CommunityPostItem> postList = new ArrayList<>();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    CommunityPostItem post = postSnapshot.getValue(CommunityPostItem.class);
+                    postList.add(post);
+                }
+                listener.onRetrieved(postList);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onRetrieved(new ArrayList<>());
+            }
+        });
+    }
+
+    // 인터페이스: 게시물 조회 결과를 위한 콜백
+    public interface OnPostsRetrievedListener {
+        void onRetrieved(List<CommunityPostItem> posts);
     }
 }

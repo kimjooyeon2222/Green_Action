@@ -26,7 +26,7 @@ public class EditPostActivity extends AppCompatActivity {
         ImageButton buttonback = findViewById(R.id.backButton);
         buttonback.setOnClickListener(v -> finish());
 
-        db_handler = new DataBaseHandler();
+        db_handler = new DataBaseHandler(this);
 
         editTitle = findViewById(R.id.edit_post_title);
         editContent = findViewById(R.id.edit_post_content);

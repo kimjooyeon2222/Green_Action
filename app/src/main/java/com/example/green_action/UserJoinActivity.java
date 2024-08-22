@@ -21,8 +21,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -37,7 +35,7 @@ public class UserJoinActivity extends AppCompatActivity {
     private static final String TAG = "UserJoin";
     private Uri profileImageUri;
     private StorageReference storageRef;
-    private DatabaseReference mDatabase;
+    private FirebaseClient firebaseClient;
     private boolean isUsernameAvailable = false;
 
     private EditText userId;
@@ -56,7 +54,7 @@ public class UserJoinActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         storageRef = FirebaseStorage.getInstance().getReference("profile_images");
-        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+        firebaseClient = new FirebaseClient();
 
         // Initialize UI components
         userEmail = findViewById(R.id.join_email);
@@ -97,10 +95,10 @@ public class UserJoinActivity extends AppCompatActivity {
                                         StorageReference fileReference = storageRef.child(System.currentTimeMillis() + "." + getFileExtension(profileImageUri));
                                         fileReference.putFile(profileImageUri).addOnSuccessListener(taskSnapshot -> fileReference.getDownloadUrl().addOnSuccessListener(uri -> {
                                             String imageUrl = uri.toString();
-                                            saveUserData(user, email, id, password, name, contact, gender, imageUrl);
+                                            saveUserData(user.getUid(), email, id, password, name, contact, gender, imageUrl);
                                         })).addOnFailureListener(e -> Toast.makeText(UserJoinActivity.this, "프로필 이미지 업로드 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                                     } else {
-                                        saveUserData(user, email, id, password, name, contact, gender, "");
+                                        saveUserData(user.getUid(), email, id, password, name, contact, gender, "");
                                     }
                                 }
                             } else {
@@ -136,9 +134,9 @@ public class UserJoinActivity extends AppCompatActivity {
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
-    private void saveUserData(FirebaseUser user, String email, String id, String password, String name, String contact, String gender, String imageUrl) {
+    private void saveUserData(String userId, String email, String id, String password, String name, String contact, String gender, String imageUrl) {
         User newUser = new User(
-                user.getUid(),
+                userId,
                 email,
                 imageUrl,
                 name,
@@ -150,8 +148,7 @@ public class UserJoinActivity extends AppCompatActivity {
                 0
         );
 
-        FirebaseClient firebaseClient = new FirebaseClient();
-        firebaseClient.saveUserData(user.getUid(), newUser);
+        firebaseClient.saveUserData(userId, newUser);
 
         Toast.makeText(UserJoinActivity.this, "회원가입 성공", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(UserJoinActivity.this, LoginActivity.class);
@@ -175,21 +172,12 @@ public class UserJoinActivity extends AppCompatActivity {
         }
 
         // 아이디 중복 확인
-        mDatabase.orderByChild("userId").equalTo(id).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    isUsernameAvailable = false;
-                    Toast.makeText(UserJoinActivity.this, "아이디가 이미 존재합니다.", Toast.LENGTH_SHORT).show();
-                } else {
-                    isUsernameAvailable = true;
-                    Toast.makeText(UserJoinActivity.this, "사용 가능한 아이디입니다.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(UserJoinActivity.this, "아이디 중복 체크 실패: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+        firebaseClient.checkDuplicateId(id, isAvailable -> {
+            isUsernameAvailable = isAvailable;
+            if (isAvailable) {
+                Toast.makeText(UserJoinActivity.this, "사용 가능한 아이디입니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(UserJoinActivity.this, "아이디가 이미 존재합니다.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -240,7 +228,7 @@ public class UserJoinActivity extends AppCompatActivity {
         }
 
         if (!isValidName(name)) {
-            Toast.makeText(UserJoinActivity.this, "이름 형식이 올바르지 않습니다.(에: 홍길동)", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UserJoinActivity.this, "이름 형식이 올바르지 않습니다.(예: 홍길동)", Toast.LENGTH_SHORT).show();
             userName.requestFocus();
             return false;
         }

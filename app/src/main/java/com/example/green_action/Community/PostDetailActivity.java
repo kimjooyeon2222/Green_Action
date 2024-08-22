@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.green_action.LoginActivity;
 import com.example.green_action.R;
 import com.example.green_action.remote.FirebaseClient;
 import com.google.firebase.auth.FirebaseAuth;
@@ -84,7 +85,7 @@ public class PostDetailActivity extends AppCompatActivity {
                     incrementLikeCount();
                 }
             } else {
-                Intent intent = new Intent(PostDetailActivity.this, CommunityActivity.class);
+                Intent intent = new Intent(PostDetailActivity.this, LoginActivity.class);
                 startActivity(intent);
                 Toast.makeText(PostDetailActivity.this, "로그인 후 좋아요를 누를 수 있습니다.", Toast.LENGTH_SHORT).show();
             }
@@ -126,7 +127,7 @@ public class PostDetailActivity extends AppCompatActivity {
                     Toast.makeText(PostDetailActivity.this, "댓글 내용을 입력하세요.", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Intent intent = new Intent(PostDetailActivity.this, CommunityActivity.class);
+                Intent intent = new Intent(PostDetailActivity.this, LoginActivity.class);
                 startActivity(intent);
                 Toast.makeText(PostDetailActivity.this, "로그인 후 댓글을 작성할 수 있습니다.", Toast.LENGTH_SHORT).show();
             }

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.green_action.DataBaseHandler;
+import com.example.green_action.LoginActivity;
 import com.example.green_action.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,7 +42,7 @@ public class CommunityPostActivity extends AppCompatActivity {
         ImageButton buttonback = findViewById(R.id.backButton);
         buttonback.setOnClickListener(v -> finish());
 
-        db_handler = new DataBaseHandler();
+        db_handler = new DataBaseHandler(this);
         firebaseAuth = FirebaseAuth.getInstance(); // FirebaseAuth 인스턴스 초기화
         postItemList = new ArrayList<>();
 
@@ -64,7 +65,7 @@ public class CommunityPostActivity extends AppCompatActivity {
                 Intent intent = new Intent(CommunityPostActivity.this, WritePostActivity.class);
                 startActivity(intent);
             } else {
-                Intent intent = new Intent(CommunityPostActivity.this, CommunityActivity.class);
+                Intent intent = new Intent(CommunityPostActivity.this, LoginActivity.class);
                 startActivity(intent);
                 Toast.makeText(CommunityPostActivity.this, "로그인 후 글을 작성할 수 있습니다.", Toast.LENGTH_SHORT).show();
             }
@@ -84,7 +85,7 @@ public class CommunityPostActivity extends AppCompatActivity {
         } else {
             loginLogoutButton.setText("로그인");
             loginLogoutButton.setOnClickListener(v -> {
-                Intent intent = new Intent(CommunityPostActivity.this, CommunityActivity.class);
+                Intent intent = new Intent(CommunityPostActivity.this, LoginActivity.class);
                 startActivity(intent);
             });
         }
