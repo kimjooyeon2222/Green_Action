@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.green_action.remote.FirebaseClient; // FirebaseClient를 통해 사용자 정보 저장
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -33,6 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText id, pw;
     private GoogleSignInClient mGoogleSignInClient;
+    private FirebaseClient firebaseClient; // FirebaseClient 인스턴스 추가
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,9 @@ public class LoginActivity extends AppCompatActivity {
 
         // FirebaseAuth 인스턴스 초기화
         mAuth = FirebaseAuth.getInstance();
+
+        // FirebaseClient 인스턴스 초기화
+        firebaseClient = new FirebaseClient();
 
         // 이미 로그인된 사용자가 있는지 확인하고, 있으면 메인 액티비티로 이동
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -53,8 +58,6 @@ public class LoginActivity extends AppCompatActivity {
 
         // 로그인 화면 레이아웃 설정
         setContentView(R.layout.activity_login);
-
-
 
         // EditText와 Button 연결
         id = findViewById(R.id.login_id);
@@ -191,6 +194,8 @@ public class LoginActivity extends AppCompatActivity {
                         // Google 로그인 성공 시 메인 액티비티로 이동
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
+                            // Google 로그인 사용자의 정보를 Firebase Database에 저장
+                            saveGoogleUserData(user);
                             Toast.makeText(LoginActivity.this, "Google 로그인 성공", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.putExtra("user_uid", user.getUid());
@@ -213,4 +218,20 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
+// Google 로그인 사용자 정보를 Firebase Database에 저장
+    private void saveGoogleUserData(FirebaseUser user) {
+        String userId = user.getUid();
+        String userName = user.getDisplayName() != null ? user.getDisplayName() : "Unknown User";
+        String userEmail = user.getEmail();
+        String profileImage = user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : "";
+
+        // 필요한 필드만 사용하여 User 객체 생성
+        User newUser = new User(userId, userEmail, profileImage, userName, "", "", userId, "", 0, 0);
+
+        // FirebaseClient를 통해 사용자 정보 저장
+        firebaseClient.saveUserData(userId, newUser); // userId를 key로 사용하여 데이터 저장
+    }
+
 }
