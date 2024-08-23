@@ -14,6 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.green_action.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,14 +51,24 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         // UID의 앞 7자리만 가져오기
         String displayId = comment.getUserId().substring(0, Math.min(comment.getUserId().length(), 7));
 
-        // 사용자 이름에 이미 UID가 포함되어 있는지 확인
-        String username = comment.getUsername();
-        if (!username.contains("(" + displayId + ")")) {
-            username = username + " (" + displayId + ")";
-        }
-
         // 사용자 이름과 UID의 앞 7자리를 함께 표시
-        holder.userInfo.setText(username);
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(comment.getUserId());
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String userName = snapshot.child("name").getValue(String.class);
+                if (userName != null) {
+                    holder.userInfo.setText(userName + " (" + displayId + ")");
+                } else {
+                    holder.userInfo.setText("Unknown User (" + displayId + ")");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                holder.userInfo.setText("Unknown User (" + displayId + ")");
+            }
+        });
 
         holder.content.setText(comment.getCommentText());
         holder.timestamp.setText(convertTimestampToDate(comment.getTimestamp()));

@@ -2,6 +2,8 @@ package com.example.green_action.remote;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.green_action.Ranking;
 import com.example.green_action.DailyQuiz;
 import com.example.green_action.Post;
@@ -43,13 +45,34 @@ public class FirebaseClient {
             });
         }
     }
-
-    // 사용자 데이터를 Firebase에서 로드하는 메서드
     public void loadUserData(String userId, ValueEventListener listener) {
         if (userId != null && !userId.isEmpty()) {
-            usersRef.child(userId).addListenerForSingleValueEvent(listener);
+            Log.d(TAG, "Loading user data for userId: " + userId);
+            DatabaseReference userRef = usersRef.child(userId);
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        listener.onDataChange(dataSnapshot);
+                    } else {
+                        Log.e(TAG, "User data not found for userId: " + userId);
+                        // Default to unknown user if not found
+                        listener.onDataChange(null);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e(TAG, "Error loading user data: " + databaseError.getMessage());
+                    listener.onCancelled(databaseError);
+                }
+            });
+        } else {
+            Log.e(TAG, "User ID is null or empty");
+            listener.onDataChange(null);
         }
     }
+
 
     // 아이디 중복 확인 함수 (Firebase에서 체크)
     public void isIDExists(String id, final OnCheckUserExistsListener listener) {

@@ -55,16 +55,18 @@ public class CommunityPostAdapter extends RecyclerView.Adapter<CommunityPostAdap
             userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String userName = snapshot.child("username").getValue(String.class);
-                    if (userName == null) {
+                    String userName = snapshot.child("name").getValue(String.class);
+                    String displayId = userId.substring(0, Math.min(userId.length(), 7));
+                    if (userName == null || userName.isEmpty()) {
                         userName = "Unknown User";
                     }
-                    holder.userInfo.setText(userName);
+                    holder.userInfo.setText(userName + " (" + displayId + ")");
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    holder.userInfo.setText("Unknown User (" + userId.substring(0, 7) + ")");
+                    String displayId = userId.substring(0, Math.min(userId.length(), 7));
+                    holder.userInfo.setText("Unknown User (" + displayId + ")");
                 }
             });
         } else {

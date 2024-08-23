@@ -2,6 +2,7 @@ package com.example.green_action.Community;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -91,12 +92,11 @@ public class PostDetailActivity extends AppCompatActivity {
             }
         });
 
-
         // 댓글 RecyclerView 초기화
         commentRecyclerView = findViewById(R.id.comment_recycler_view);
         commentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         commentList = new ArrayList<>();
-        commentAdapter = new CommentAdapter(commentList, this, postId);  // postId 추가
+        commentAdapter = new CommentAdapter(commentList, this, postId);
         commentRecyclerView.setAdapter(commentAdapter);
 
         // 댓글 데이터 불러오기
@@ -115,8 +115,6 @@ public class PostDetailActivity extends AppCompatActivity {
             }
         });
 
-
-
         submitCommentButton.setOnClickListener(v -> {
             if (isLoggedIn()) {
                 String commentText = commentEditText.getText().toString().trim();
@@ -132,7 +130,6 @@ public class PostDetailActivity extends AppCompatActivity {
                 Toast.makeText(PostDetailActivity.this, "로그인 후 댓글을 작성할 수 있습니다.", Toast.LENGTH_SHORT).show();
             }
         });
-
 
         // 더보기 버튼 처리
         ImageButton moreButton = findViewById(R.id.post_more_button);
@@ -164,11 +161,11 @@ public class PostDetailActivity extends AppCompatActivity {
             popupMenu.show();
         });
     }
+
     private boolean isLoggedIn() {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         return currentUser != null || (loggedInUserId != null && !loggedInUserId.isEmpty());
     }
-
 
     private void displayPostDetails() {
         TextView titleTextView = findViewById(R.id.detail_post_title);
@@ -191,19 +188,28 @@ public class PostDetailActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    String username = snapshot.child("username").getValue(String.class);
+                    String username = snapshot.child("name").getValue(String.class);
                     if (username == null || username.isEmpty()) {
                         username = "Unknown User";
+                        Log.e("retrieveUsername", "Username is null or empty for userId: " + userId);
+                    } else {
+                        Log.d("retrieveUsername", "Username found: " + username);
                     }
-                    idTextView.setText(username);
+                    // 사용자 이름과 UID의 앞 7자리를 함께 표시
+                    String displayId = userId.substring(0, Math.min(userId.length(), 7));
+                    idTextView.setText(username + " (" + displayId + ")");
                 } else {
-                    idTextView.setText("Unknown User (unknown)");
+                    Log.e("retrieveUsername", "No user data found for userId: " + userId);
+                    String displayId = userId.substring(0, Math.min(userId.length(), 7));
+                    idTextView.setText("Unknown User (" + displayId + ")");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                idTextView.setText("Unknown User (unknown)");
+                Log.e("retrieveUsername", "Database error: " + error.getMessage());
+                String displayId = userId.substring(0, Math.min(userId.length(), 7));
+                idTextView.setText("Unknown User (" + displayId + ")");
                 Toast.makeText(PostDetailActivity.this, "사용자 정보를 불러오지 못했습니다.", Toast.LENGTH_SHORT).show();
             }
         });

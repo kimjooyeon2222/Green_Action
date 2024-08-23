@@ -145,8 +145,13 @@ public class DataBaseHandler extends SQLiteOpenHelper {
                     List<CommunityPostItem> postList = new ArrayList<>();
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                         CommunityPostItem post = postSnapshot.getValue(CommunityPostItem.class);
-                        Log.d("DataBaseHandler", "Retrieved post: " + post.getTitle());
-                        postList.add(post);
+
+                        if (post != null) {
+                            // Log를 통해 username 필드가 올바르게 로드되는지 확인
+                            Log.d("DataBaseHandler", "Retrieved post: " + post.getTitle() + ", User: " + post.getUserName());
+
+                            postList.add(post);
+                        }
                     }
                     listener.onRetrieved(postList);
                 }
