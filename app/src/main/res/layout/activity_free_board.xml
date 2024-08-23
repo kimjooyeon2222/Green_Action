@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/nanumeb"
-                android:text="게시판"
+                android:text="자유 게시판"
                 android:textColor="@color/black"
                 android:textSize="30sp"
                 android:textStyle="bold" />
@@ -45,14 +45,12 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:padding="10dp"
         android:id="@+id/community_list"
         android:layout_width="match_parent"
-        android:fontFamily="@font/nanumeb"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-
+        android:layout_weight="1"
+        android:fontFamily="@font/nanumeb"
+        android:padding="10dp" />
 
     <LinearLayout
         android:padding="10dp"

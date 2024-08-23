@@ -23,7 +23,11 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Firebase 관련 필드
-    private final DatabaseReference postsRef;
+    private final DatabaseReference usersRef;
+    private final DatabaseReference issuePostsRef;
+    private final DatabaseReference freePostsRef;    // 추가된 부분
+    private final DatabaseReference noticePostsRef;  // 추가된 부분
+    private final DatabaseReference qnaPostsRef;     // 추가된 부분
 
     // SQLite 관련 테이블 이름과 컬럼 정의
     private static final String TABLE_QUIZ_PROGRESS = "quiz_progress";
@@ -34,7 +38,11 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public DataBaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        postsRef = database.getReference("posts");
+        usersRef = database.getReference("users");
+        issuePostsRef = database.getReference("issue_posts");
+        freePostsRef = database.getReference("free_posts");     // 추가된 부분
+        noticePostsRef = database.getReference("notice_posts"); // 추가된 부분
+        qnaPostsRef = database.getReference("qna_posts");       // 추가된 부분
     }
 
     @Override
@@ -101,26 +109,63 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     }
 
     // Firebase를 사용한 게시물 추가 함수
-    public void addPost(CommunityPostItem post) {
-        DatabaseReference newPostRef = postsRef.push();
-        post.setPostId(newPostRef.getKey());
-        newPostRef.setValue(post);
+    public void addPost(CommunityPostItem post, String boardType) {
+        DatabaseReference postsRef = getPostsReference(boardType);
+        if (postsRef != null) {
+            DatabaseReference newPostRef = postsRef.push();
+            post.setPostId(newPostRef.getKey());
+            newPostRef.setValue(post);
+        }
     }
 
     // Firebase를 사용한 게시물 수정 함수
-    public void updatePost(String postId, String title, String content) {
-        postsRef.child(postId).child("title").setValue(title);
-        postsRef.child(postId).child("content").setValue(content);
+    public void updatePost(String postId, String title, String content, String boardType) {
+        DatabaseReference postsRef = getPostsReference(boardType);
+        if (postsRef != null) {
+            postsRef.child(postId).child("title").setValue(title);
+            postsRef.child(postId).child("content").setValue(content);
+        }
     }
 
     // Firebase를 사용한 게시물 삭제 함수
-    public void deletePost(String postId) {
-        postsRef.child(postId).removeValue();
+    public void deletePost(String postId, String boardType) {
+        DatabaseReference postsRef = getPostsReference(boardType);
+        if (postsRef != null) {
+            postsRef.child(postId).removeValue();
+        }
     }
 
-    // Firebase를 사용한 모든 게시물 가져오기 함수
+    // 특정 유형의 게시물 가져오기 함수
+    public void getPostsByType(String boardType, final OnPostsRetrievedListener listener) {
+        DatabaseReference postsRef = getPostsReference(boardType);
+        if (postsRef != null) {
+            postsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    List<CommunityPostItem> postList = new ArrayList<>();
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        CommunityPostItem post = postSnapshot.getValue(CommunityPostItem.class);
+                        Log.d("DataBaseHandler", "Retrieved post: " + post.getTitle());
+                        postList.add(post);
+                    }
+                    listener.onRetrieved(postList);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e("DataBaseHandler", "Failed to retrieve posts", databaseError.toException());
+                    listener.onRetrieved(new ArrayList<>());
+                }
+            });
+        } else {
+            Log.e("DataBaseHandler", "Invalid board type: " + boardType);
+            listener.onRetrieved(new ArrayList<>());
+        }
+    }
+
+    // 모든 게시물 가져오기 함수
     public void getAllPosts(final OnPostsRetrievedListener listener) {
-        postsRef.addValueEventListener(new ValueEventListener() {
+        issuePostsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<CommunityPostItem> postList = new ArrayList<>();
@@ -138,8 +183,44 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         });
     }
 
+    // 게시판 유형에 따른 참조 반환 메서드
+    private DatabaseReference getPostsReference(String boardType) {
+        switch (boardType) {
+            case "issue":
+                return issuePostsRef;
+            case "free":
+                return freePostsRef;
+            case "notice":
+                return noticePostsRef;
+            case "qna":
+                return qnaPostsRef;
+            default:
+                return null;
+        }
+    }
+
+    // 아이디 중복 확인 함수 (Firebase에서 체크)
+    public void isIDExists(String id, final OnCheckUserExistsListener listener) {
+        usersRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                listener.onCheck(dataSnapshot.exists());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onCheck(false);
+            }
+        });
+    }
+
     // 인터페이스: 게시물 조회 결과를 위한 콜백
     public interface OnPostsRetrievedListener {
         void onRetrieved(List<CommunityPostItem> posts);
+    }
+
+    // 인터페이스: 중복 체크 결과를 위한 콜백
+    public interface OnCheckUserExistsListener {
+        void onCheck(boolean exists);
     }
 }

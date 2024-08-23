@@ -8,6 +8,7 @@ public class CommunityPostItem {
     private String timestamp;
     private String username;  // 새로운 필드 추가
     private int likes;  // likes 필드 추가
+    private String boardType;  // 게시판 유형을 나타내는 필드 추가
 
     public CommunityPostItem() {
         // 기본 생성자
@@ -20,7 +21,6 @@ public class CommunityPostItem {
         this.content = content;
         this.timestamp = timestamp;
         this.username = username;
-
     }
 
     // Getter and Setter methods
@@ -78,5 +78,13 @@ public class CommunityPostItem {
 
     public void setLikes(int likes) {
         this.likes = likes;
+    }
+
+    public String getBoardType() {
+        return boardType;
+    }
+
+    public void setBoardType(String boardType) {
+        this.boardType = boardType;
     }
 }

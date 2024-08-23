@@ -63,14 +63,11 @@
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Community.CommunityActivity"
-            android:exported="true"/>
-        <activity
             android:name=".Community.WritePostActivity"
             android:exported="true"/>
-        <activity
+<!--        <activity
             android:name=".Community.CommunityPostActivity"
-            android:exported="true"/>
+            android:exported="true"/>-->
         <activity
             android:name=".Community.EditPostActivity"
             android:exported="true"/>

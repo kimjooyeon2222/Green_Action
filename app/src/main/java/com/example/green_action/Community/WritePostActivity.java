@@ -21,6 +21,7 @@ public class WritePostActivity extends AppCompatActivity {
 
     private FirebaseClient firebaseClient;
     private DatabaseReference postsRef;
+    private String boardType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,17 @@ public class WritePostActivity extends AppCompatActivity {
         buttonback.setOnClickListener(v -> finish());
 
         firebaseClient = new FirebaseClient();
-        postsRef = FirebaseDatabase.getInstance().getReference("posts");
+
+        // 게시판 타입을 받아옴
+        boardType = getIntent().getStringExtra("boardType");
+        if (boardType == null) {
+            Toast.makeText(this, "게시판 타입을 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        // 게시판에 맞는 Firebase 경로 설정
+        postsRef = FirebaseDatabase.getInstance().getReference(boardType + "_posts");
 
         EditText titleEditText = findViewById(R.id.post_title);
         EditText contentEditText = findViewById(R.id.post_content);
@@ -43,14 +54,13 @@ public class WritePostActivity extends AppCompatActivity {
             String userId = getUserId(); // 사용자 ID를 가져오는 메서드
             String username = getUserName(); // 사용자 이름을 가져오는 메서드
 
-
             if (!title.isEmpty() && !content.isEmpty()) {
                 DatabaseReference newPostRef = postsRef.push(); // 고유 postId 생성
                 newPostRef.setValue(new CommunityPostItem(newPostRef.getKey(), userId, title, content, getCurrentTimestamp(), username))
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(WritePostActivity.this, "게시물이 성공적으로 등록되었습니다!", Toast.LENGTH_SHORT).show();
-                            // 커뮤니티 화면으로 돌아가기
-                            Intent intent = new Intent(WritePostActivity.this, CommunityPostActivity.class);
+                            // 작성 완료 후 원래 게시판으로 돌아가기
+                            Intent intent = new Intent(WritePostActivity.this, getBoardActivityClass());
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             finish(); // 현재 액티비티 종료
@@ -62,6 +72,21 @@ public class WritePostActivity extends AppCompatActivity {
                 Toast.makeText(WritePostActivity.this, "모든 필드를 작성해 주세요.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private Class<?> getBoardActivityClass() {
+        switch (boardType) {
+            case "issue":
+                return IssueBoardActivity.class;
+            case "free":
+                return FreeBoardActivity.class;
+            case "notice":
+                return NoticeBoardActivity.class;
+            case "qna":
+                return QnaBoardActivity.class;
+            default:
+                throw new IllegalArgumentException("Invalid board type");
+        }
     }
 
     private String getUserId() {

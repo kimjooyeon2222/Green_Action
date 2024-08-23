@@ -7,6 +7,8 @@ import com.example.green_action.DailyQuiz;
 import com.example.green_action.Post;
 import com.example.green_action.Comment;
 import com.example.green_action.User;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -15,30 +17,53 @@ public class FirebaseClient {
 
     private final FirebaseDatabase database;
     private final DatabaseReference dbRef;
-    private final DatabaseReference postsRef;
     private final DatabaseReference usersRef;
-    private final DatabaseReference dailyQuizRef;  // 추가된 부분
+    private final DatabaseReference postsRef;
+    private final DatabaseReference dailyQuizRef;
 
     private static final String TAG = "FirebaseClient";
 
     public FirebaseClient() {
-        database = FirebaseDatabase.getInstance(); // Firebase Database 인스턴스 생성
-        dbRef = database.getReference(); // 기본 경로 설정
-        usersRef = database.getReference("users");
-        postsRef = dbRef.child("posts"); // "posts" 경로 설정
-        dailyQuizRef = database.getReference("daily_quiz");  // 추가된 부분
-
+        database = FirebaseDatabase.getInstance();
+        dbRef = database.getReference();
+        usersRef = dbRef.child("users");
+        postsRef = dbRef.child("posts");
+        dailyQuizRef = dbRef.child("daily_quiz");
     }
+
+    // 사용자 데이터를 Firebase에 저장하는 메서드
     public void saveUserData(String userId, User user) {
         if (userId != null && user != null) {
             usersRef.child(userId).setValue(user).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    System.out.println("User data saved successfully.");
+                    Log.d(TAG, "User data saved successfully.");
                 } else {
-                    System.out.println("Failed to save user data.");
+                    Log.e(TAG, "Failed to save user data", task.getException());
                 }
             });
         }
+    }
+
+    // 사용자 데이터를 Firebase에서 로드하는 메서드
+    public void loadUserData(String userId, ValueEventListener listener) {
+        if (userId != null && !userId.isEmpty()) {
+            usersRef.child(userId).addListenerForSingleValueEvent(listener);
+        }
+    }
+
+    // 아이디 중복 확인 함수 (Firebase에서 체크)
+    public void isIDExists(String id, final OnCheckUserExistsListener listener) {
+        usersRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                listener.onCheck(dataSnapshot.exists());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                listener.onCheck(false);
+            }
+        });
     }
 
     // 게시글 참조 가져오기
@@ -56,14 +81,13 @@ public class FirebaseClient {
             }
         });
     }
+    // 사용자 데이터 참조 반환 메서드
     public DatabaseReference getUsersRef() {
         return usersRef;
     }
-
     // 게시글 데이터를 Firebase에서 불러오는 메서드
     public void loadPostData(String postId, ValueEventListener listener) {
-        DatabaseReference postRef = postsRef.child(postId);
-        postRef.addListenerForSingleValueEvent(listener);
+        postsRef.child(postId).addListenerForSingleValueEvent(listener);
     }
 
     // 댓글 참조 가져오기
@@ -84,8 +108,7 @@ public class FirebaseClient {
 
     // 댓글 데이터를 Firebase에서 불러오는 메서드
     public void loadCommentData(String commentId, ValueEventListener listener) {
-        DatabaseReference commentRef = dbRef.child("comments").child(commentId);
-        commentRef.addListenerForSingleValueEvent(listener);
+        dbRef.child("comments").child(commentId).addListenerForSingleValueEvent(listener);
     }
 
     // 랭킹 데이터를 저장하는 메서드
@@ -101,13 +124,12 @@ public class FirebaseClient {
 
     // 랭킹 데이터를 Firebase에서 불러오는 메서드
     public void loadRankingData(String userId, ValueEventListener listener) {
-        DatabaseReference rankingRef = dbRef.child("ranking").child(userId);
-        rankingRef.addListenerForSingleValueEvent(listener);
+        dbRef.child("ranking").child(userId).addListenerForSingleValueEvent(listener);
     }
 
     // 일일 퀴즈를 저장하는 메서드
     public void saveDailyQuizData(String quizId, DailyQuiz dailyQuiz) {
-        dbRef.child("daily_quiz").child(quizId).setValue(dailyQuiz).addOnCompleteListener(task -> {
+        dailyQuizRef.child(quizId).setValue(dailyQuiz).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(TAG, "Daily quiz data saved successfully.");
             } else {
@@ -115,35 +137,31 @@ public class FirebaseClient {
             }
         });
     }
-    // 사용자 데이터를 Firebase에서 로드하는 메서드
-    public void loadUserData(String userId, ValueEventListener listener) {
-        if (userId != null && !userId.isEmpty()) {
-            DatabaseReference userRef = usersRef.child(userId);
-            userRef.addListenerForSingleValueEvent(listener);
-        }
-    }
+
     // 일일 퀴즈 데이터를 Firebase에서 불러오는 메서드
     public void loadDailyQuizData(String quizId, ValueEventListener listener) {
-        DatabaseReference dailyQuizRef = dbRef.child("daily_quiz").child(quizId);
-        dailyQuizRef.addListenerForSingleValueEvent(listener);
+        dailyQuizRef.child(quizId).addListenerForSingleValueEvent(listener);
     }
 
     // 퀴즈 진행 상태 저장 메서드
     public void saveQuizProgress(String userId, int quizId, boolean isSolved) {
-        DatabaseReference userQuizRef = dbRef.child("users").child(userId).child("quiz_progress").child(String.valueOf(quizId));
-        userQuizRef.setValue(isSolved ? 1 : 0).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Log.d(TAG, "Quiz progress saved successfully.");
-            } else {
-                Log.e(TAG, "Failed to save quiz progress", task.getException());
-            }
-        });
+        dbRef.child("users").child(userId).child("quiz_progress").child(String.valueOf(quizId))
+                .setValue(isSolved ? 1 : 0).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d(TAG, "Quiz progress saved successfully.");
+                    } else {
+                        Log.e(TAG, "Failed to save quiz progress", task.getException());
+                    }
+                });
     }
 
     // 퀴즈 진행 상태 전체를 Firebase에서 불러오는 메서드
     public void loadAllQuizProgress(String userId, ValueEventListener listener) {
-        DatabaseReference quizProgressRef = dbRef.child("users").child(userId).child("quiz_progress");
-        quizProgressRef.addListenerForSingleValueEvent(listener);
+        dbRef.child("users").child(userId).child("quiz_progress").addListenerForSingleValueEvent(listener);
     }
 
+    // 인터페이스: 아이디 중복 확인 결과를 위한 콜백
+    public interface OnCheckUserExistsListener {
+        void onCheck(boolean exists);
+    }
 }

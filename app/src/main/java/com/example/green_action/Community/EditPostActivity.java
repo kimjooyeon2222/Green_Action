@@ -12,10 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.green_action.DataBaseHandler;
 import com.example.green_action.R;
 
-
 public class EditPostActivity extends AppCompatActivity {
     private DataBaseHandler db_handler;
-    private String postId;
+    private String postId, boardType;
     private EditText editTitle, editContent;
 
     @Override
@@ -34,7 +33,8 @@ public class EditPostActivity extends AppCompatActivity {
         Button deleteButton = findViewById(R.id.delete_button);
 
         Intent intent = getIntent();
-        postId = intent.getStringExtra("postId"); // 수정: postId를 String으로 받음
+        postId = intent.getStringExtra("postId");
+        boardType = intent.getStringExtra("boardType"); // 게시판 유형을 받음
         String title = intent.getStringExtra("title");
         String content = intent.getStringExtra("content");
 
@@ -46,7 +46,7 @@ public class EditPostActivity extends AppCompatActivity {
             String newContent = editContent.getText().toString().trim();
 
             if (!newTitle.isEmpty() && !newContent.isEmpty()) {
-                db_handler.updatePost(postId, newTitle, newContent);
+                db_handler.updatePost(postId, newTitle, newContent, boardType); // 게시판 유형을 포함하여 업데이트
                 Toast.makeText(EditPostActivity.this, "게시물이 수정되었습니다.", Toast.LENGTH_SHORT).show();
                 finish();
             } else {
@@ -55,7 +55,7 @@ public class EditPostActivity extends AppCompatActivity {
         });
 
         deleteButton.setOnClickListener(v -> {
-            db_handler.deletePost(postId);
+            db_handler.deletePost(postId, boardType); // 게시판 유형을 포함하여 삭제
             Toast.makeText(EditPostActivity.this, "게시물이 삭제되었습니다.", Toast.LENGTH_SHORT).show();
             finish();
         });

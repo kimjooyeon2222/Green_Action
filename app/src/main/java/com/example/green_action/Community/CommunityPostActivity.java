@@ -18,17 +18,22 @@ import com.example.green_action.LoginActivity;
 import com.example.green_action.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CommunityPostActivity extends AppCompatActivity {
+public abstract class CommunityPostActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_EDIT_POST = 1;
 
     private DataBaseHandler db_handler;
-    private List<CommunityPostItem> postItemList;
+    protected List<CommunityPostItem> postItemList;
     private RecyclerView recyclerView;
     private CommunityPostAdapter adapter;
     private String loggedInUserId;
@@ -37,7 +42,7 @@ public class CommunityPostActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_community_post);
+        setContentView(getLayoutResourceId());
 
         ImageButton buttonback = findViewById(R.id.backButton);
         buttonback.setOnClickListener(v -> finish());
@@ -63,6 +68,7 @@ public class CommunityPostActivity extends AppCompatActivity {
         writePostButton.setOnClickListener(v -> {
             if (isLoggedIn()) {
                 Intent intent = new Intent(CommunityPostActivity.this, WritePostActivity.class);
+                intent.putExtra("boardType", getBoardType()); // 게시판 타입 전달
                 startActivity(intent);
             } else {
                 Intent intent = new Intent(CommunityPostActivity.this, LoginActivity.class);
@@ -71,31 +77,32 @@ public class CommunityPostActivity extends AppCompatActivity {
             }
         });
 
-        Button loginLogoutButton = findViewById(R.id.login_logout_button);
-        if (isLoggedIn()) {
-            loginLogoutButton.setText("로그아웃");
-            loginLogoutButton.setOnClickListener(v -> {
-                SharedPreferences.Editor editor = getSharedPreferences("LoginPrefs", MODE_PRIVATE).edit();
-                editor.remove("loggedInUserId");  // 로그인 ID 제거
-                editor.apply();
-                firebaseAuth.signOut();  // Firebase 인증 로그아웃
-                Toast.makeText(CommunityPostActivity.this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show();
-                recreate(); // 액티비티 재시작
-            });
-        } else {
-            loginLogoutButton.setText("로그인");
-            loginLogoutButton.setOnClickListener(v -> {
-                Intent intent = new Intent(CommunityPostActivity.this, LoginActivity.class);
-                startActivity(intent);
-            });
-        }
-
         // 초기화 시 모든 게시물 로드
-        db_handler.getAllPosts(posts -> {
-            postItemList.clear();
-            postItemList.addAll(posts);
-            Collections.reverse(postItemList); // 최신 게시물이 맨 위로 오도록 역순 정렬
-            adapter.notifyDataSetChanged();
+        loadPostsByBoardType();
+    }
+
+    // 게시판 유형에 맞는 게시물을 로드하는 메서드
+    private void loadPostsByBoardType() {
+        String boardType = getBoardType();
+        String path = boardType + "_posts"; // 게시판 유형에 따른 Firebase 경로 설정
+        DatabaseReference postsRef = FirebaseDatabase.getInstance().getReference(path);
+
+        postsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                postItemList.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    CommunityPostItem postItem = postSnapshot.getValue(CommunityPostItem.class);
+                    postItemList.add(postItem);
+                }
+                Collections.reverse(postItemList); // 최신 게시물이 맨 위로 오도록 역순 정렬
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // 로드 실패 시 처리
+            }
         });
     }
 
@@ -110,20 +117,7 @@ public class CommunityPostActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         // 새로고침 시 게시물 다시 로드
-        db_handler.getAllPosts(posts -> {
-            postItemList.clear();
-            postItemList.addAll(posts);
-            Collections.reverse(postItemList); // 최신 게시물이 맨 위로 오도록 역순 정렬
-            adapter.notifyDataSetChanged();
-        });
-
-        // onResume 시 로그인 상태를 다시 확인하여 버튼 텍스트 갱신
-        Button loginLogoutButton = findViewById(R.id.login_logout_button);
-        if (isLoggedIn()) {
-            loginLogoutButton.setText("로그아웃");
-        } else {
-            loginLogoutButton.setText("로그인");
-        }
+        loadPostsByBoardType();
     }
 
     @Override
@@ -152,4 +146,8 @@ public class CommunityPostActivity extends AppCompatActivity {
             }
         }
     }
+
+    protected abstract String getBoardType(); // 각 게시판의 유형을 반환하는 추상 메서드
+
+    protected abstract int getLayoutResourceId(); // 레이아웃 리소스 ID를 반환하는 추상 메서드
 }

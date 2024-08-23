@@ -172,14 +172,14 @@ public class UserJoinActivity extends AppCompatActivity {
         }
 
         // 아이디 중복 확인
-        firebaseClient.checkDuplicateId(id, isAvailable -> {
-            isUsernameAvailable = isAvailable;
+        firebaseClient.isIDExists(id, isAvailable -> {
             if (isAvailable) {
-                Toast.makeText(UserJoinActivity.this, "사용 가능한 아이디입니다.", Toast.LENGTH_SHORT).show();
-            } else {
                 Toast.makeText(UserJoinActivity.this, "아이디가 이미 존재합니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(UserJoinActivity.this, "사용 가능한 아이디입니다.", Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
     private boolean validateInput() {
