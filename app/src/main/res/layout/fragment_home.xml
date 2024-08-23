@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingBottom="8dp">
+            android:paddingBottom="12dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -110,13 +110,6 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/more"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:text="더 보기 >"
-                android:textColor="@android:color/holo_blue_dark" />
         </LinearLayout>
 
         <!-- 게시판 리스트 -->
@@ -144,8 +137,11 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/tv_issue_latest_post_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:text="오늘의 이슈 최신 글 제목 미리보기"
                     android:textColor="@android:color/darker_gray" />
             </LinearLayout>
@@ -167,8 +163,11 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/tv_free_latest_post_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:text="자유 게시판 최신 글 제목 미리보기"
                     android:textColor="@android:color/darker_gray" />
             </LinearLayout>
@@ -190,8 +189,11 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/tv_notice_latest_post_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:text="공지사항 최신 글 제목 미리보기"
                     android:textColor="@android:color/darker_gray" />
             </LinearLayout>
@@ -213,8 +215,11 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/tv_qna_latest_post_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:text="Q &amp; A 게시판 최신 글 제목 미리보기"
                     android:textColor="@android:color/darker_gray" />
             </LinearLayout>
