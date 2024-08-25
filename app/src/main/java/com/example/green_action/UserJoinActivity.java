@@ -182,7 +182,6 @@ public class UserJoinActivity extends AppCompatActivity {
             }
         });
     }
-ㅗ
 
     private boolean validateInput() {
         String email = userEmail.getText().toString().trim();
