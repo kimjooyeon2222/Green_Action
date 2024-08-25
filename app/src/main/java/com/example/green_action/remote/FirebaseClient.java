@@ -33,6 +33,21 @@ public class FirebaseClient {
         dailyQuizRef = dbRef.child("daily_quiz");
     }
 
+    // boardType에 따른 게시글 참조 가져오기
+    public DatabaseReference getPostsRef(String boardType) {
+        switch (boardType) {
+            case "issue":
+                return dbRef.child("issue_posts");
+            case "free":
+                return dbRef.child("free_posts");
+            case "notice":
+                return dbRef.child("notice_posts");
+            case "qna":
+                return dbRef.child("qna_posts");
+            default:
+                throw new IllegalArgumentException("Invalid board type: " + boardType);
+        }
+    }
     // 사용자 데이터를 Firebase에 저장하는 메서드
     public void saveUserData(String userId, User user) {
         if (userId != null && user != null) {
