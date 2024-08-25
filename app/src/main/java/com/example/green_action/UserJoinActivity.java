@@ -183,7 +183,6 @@ public class UserJoinActivity extends AppCompatActivity {
         });
     }
 
-
     private boolean validateInput() {
         String email = userEmail.getText().toString().trim();
         String id = userId.getText().toString().trim();
