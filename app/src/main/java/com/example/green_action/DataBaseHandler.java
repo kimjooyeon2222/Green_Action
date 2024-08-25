@@ -142,9 +142,18 @@ public class DataBaseHandler extends SQLiteOpenHelper {
     public void deletePost(String postId, String boardType) {
         DatabaseReference postsRef = getPostsReference(boardType);
         if (postsRef != null) {
-            postsRef.child(postId).removeValue();
+            postsRef.child(postId).removeValue()
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("DataBaseHandler", "게시물이 성공적으로 삭제되었습니다: " + postId);
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("DataBaseHandler", "게시물 삭제 실패: " + postId, e);
+                    });
+        } else {
+            Log.e("DataBaseHandler", "잘못된 게시판 유형: " + boardType);
         }
     }
+
 
     // 특정 유형의 게시물 가져오기 함수
     public void getPostsByType(String boardType, final OnPostsRetrievedListener listener) {
