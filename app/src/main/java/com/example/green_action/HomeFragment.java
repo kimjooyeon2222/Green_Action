@@ -86,7 +86,7 @@ public class HomeFragment extends Fragment {
         latestPostQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                         String postTitle = postSnapshot.child("title").getValue(String.class);
                         if (postTitle != null) {
