@@ -1,4 +1,4 @@
-package com.example.green_action.air_pollution;
+package com.example.green_action.soil_pollution;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.green_action.R;
+import com.example.green_action.air_pollution.AirQuizStudyFragment;
 import com.example.green_action.remote.FirebaseClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,21 +24,21 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-public class AirQuizListFragment extends Fragment {
+public class SoilQuizListFragment extends Fragment {
 
     private static final int NUM_COLUMNS = 5;
     private static final int NUM_ROWS = 6;
-    private static final String TAG = "AirQuizListFragment";
+    private static final String TAG = "SoilQuizListFragment";
     private GridLayout gridLayout;
     private FirebaseClient firebaseClient;
     private String userId;
-    private String pollutionType = "air_pollution";  // 이 부분은 전달받거나 설정해야 할 부분
+    private String pollutionType = "soil_pollution";  // 이 부분은 전달받거나 설정해야 할 부분
     private int lastSolvedQuiz = 0;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_air_pollution_quiz_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_soil_pollution_quiz_list, container, false);
 
         gridLayout = view.findViewById(R.id.gridLayout);
         gridLayout.setColumnCount(NUM_COLUMNS);
@@ -79,7 +80,7 @@ public class AirQuizListFragment extends Fragment {
             params.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, 1f);
             params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1, 1f);
             params.setMargins(4, 4, 4, 4);
-            button.setBackgroundColor(getResources().getColor(R.color.airPollution));
+            button.setBackgroundColor(getResources().getColor(R.color.soilPollution));
             button.setTextColor(getResources().getColor(R.color.black));
             button.setLayoutParams(params);
 
@@ -95,7 +96,7 @@ public class AirQuizListFragment extends Fragment {
 
     private void handleButtonClick(int quizNumber) {
         Log.d(TAG, "Handling button click for quiz number: " + quizNumber);
-        AirQuizStudyFragment studyFragment = new AirQuizStudyFragment();
+        SoilQuizStudyFragment studyFragment = new SoilQuizStudyFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("QUIZ_NUMBER", quizNumber);
         bundle.putString("POLLUTION_TYPE", pollutionType);
@@ -188,10 +189,9 @@ public class AirQuizListFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                // AirPollutionFragment로 이동하도록 설정
                 FragmentManager fragmentManager = getParentFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.fragment_container, new AirPollutionFragment());
+                transaction.replace(R.id.fragment_container, new SoilPollutionFragment());
                 transaction.commit();
             }
         });

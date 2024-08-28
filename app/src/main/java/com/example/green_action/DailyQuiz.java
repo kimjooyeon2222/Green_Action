@@ -1,23 +1,44 @@
 package com.example.green_action;
 
 public class DailyQuiz {
-    public int quizId;
-    public String question;
-    public String correctAnswer;
-    public int correctAnswerLength;
-    public int maxScore;
-    public int attemptsAllowed;
-    public String explanation;
-    public long timestamp;
+    private int quizId;
+    private QuizDetail quizDetail;
+    private long timestamp;
 
-    public DailyQuiz(int quizId, String question, String correctAnswer, int correctAnswerLength, int maxScore, int attemptsAllowed, String explanation, long timestamp) {
+    // Firebase에서 객체를 생성할 때 빈 생성자가 필요
+    public DailyQuiz() {
+    }
+
+    public DailyQuiz(int quizId, QuizDetail quizDetail, long timestamp) {
         this.quizId = quizId;
-        this.question = question;
-        this.correctAnswer = correctAnswer;
-        this.correctAnswerLength = correctAnswerLength;
-        this.maxScore = maxScore;
-        this.attemptsAllowed = attemptsAllowed;
-        this.explanation = explanation;
+        this.quizDetail = quizDetail;
         this.timestamp = timestamp;
     }
+
+    // Getter 및 Setter 메서드
+    public int getQuizId() {
+        return quizId;
+    }
+
+    public void setQuizId(int quizId) {
+        this.quizId = quizId;
+    }
+
+    public QuizDetail getQuizDetail() {
+        return quizDetail;
+    }
+
+    public void setQuizDetail(QuizDetail quizDetail) {
+        this.quizDetail = quizDetail;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
+
+
 }

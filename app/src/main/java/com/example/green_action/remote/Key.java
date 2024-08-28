@@ -3,6 +3,7 @@ package com.example.green_action.remote;
 import com.example.green_action.Comment;
 import com.example.green_action.DailyQuiz;
 import com.example.green_action.Post;
+import com.example.green_action.QuizDetail;
 import com.example.green_action.Ranking;
 import com.example.green_action.User;
 import com.google.firebase.database.ChildEventListener;
@@ -60,14 +61,19 @@ public class Key {
         return databaseReference.child("ranking").child(userId);
     }
 
-    // 오늘의 퀴즈 데이터 쓰기
-    public void writeDailyQuizData(DailyQuiz dailyQuiz) {
-        databaseReference.child("daily_quiz").setValue(dailyQuiz);
+    // 퀴즈 데이터 쓰기 (퀴즈 문제, 정답, 해설 포함)
+    public void writeQuizDetail(String quizId, QuizDetail quizDetail) {
+        databaseReference.child("quizzes").child(quizId).setValue(quizDetail);
     }
 
-    // 오늘의 퀴즈 참조 가져오기
-    public DatabaseReference getDailyQuizReference() {
-        return databaseReference.child("daily_quiz");
+    // 퀴즈 데이터 읽기
+    public DatabaseReference getQuizDetailReference(String quizId) {
+        return databaseReference.child("quizzes").child(quizId);
+    }
+
+    // 퀴즈 목록 참조 가져오기
+    public DatabaseReference getAllQuizDetailsReference() {
+        return databaseReference.child("quizzes");
     }
 
     // 데이터 삭제 메서드
